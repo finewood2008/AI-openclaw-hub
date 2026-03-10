@@ -153,18 +153,33 @@ GW_PID=$!
 for i in $(seq 1 30); do
     sleep 0.5
     if curl -s -o /dev/null -w '' "http://127.0.0.1:$PORT/" 2>/dev/null; then
-        URL="http://127.0.0.1:$PORT/#token=${TOKEN}"
+        DASHBOARD_URL="http://127.0.0.1:$PORT/#token=${TOKEN}"
+        CONFIG_PAGE="$UCLAW_DIR/Config.html?port=$PORT"
         echo ""
         echo -e "  ${GREEN}✅ Started successfully!${NC}"
         echo ""
-        echo -e "  ${CYAN}Dashboard: ${URL}${NC}"
-        echo ""
-        echo -e "  ${YELLOW}First time? Configure in the web console:${NC}"
-        echo "    1. Choose AI model (DeepSeek / Kimi / Qwen)"
-        echo "    2. Enter API Key"
-        echo "    3. Connect chat platform (QQ / Feishu / DingTalk)"
-        echo ""
-        open "$URL" 2>/dev/null
+
+        # Check if model is configured
+        HAS_MODEL=$(python3 -c "
+import json,os
+for p in ['$STATE_DIR/openclaw.json','$DATA_DIR/config.json']:
+    if os.path.exists(p):
+        d=json.load(open(p))
+        if d.get('agent',{}).get('model'):
+            print('yes'); break
+" 2>/dev/null)
+
+        if [ "$HAS_MODEL" = "yes" ]; then
+            echo -e "  ${CYAN}Dashboard: ${DASHBOARD_URL}${NC}"
+            echo ""
+            open "$DASHBOARD_URL" 2>/dev/null
+        else
+            echo -e "  ${YELLOW}首次使用，打开配置页面...${NC}"
+            echo -e "  ${CYAN}配置页面: Config.html${NC}"
+            echo -e "  ${CYAN}控制台: ${DASHBOARD_URL}${NC}"
+            echo ""
+            open "$CONFIG_PAGE" 2>/dev/null
+        fi
         break
     fi
 done
