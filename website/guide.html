@@ -140,6 +140,13 @@ ul{padding-left:20px}
     </div>
 
     <div class="nav-group">
+      <div class="nav-group-title" onclick="this.parentElement.classList.toggle('open')"><span class="arrow">▶</span> 🛠️ 推荐工具</div>
+      <div class="nav-group-items">
+        <a class="nav-item" href="#" data-page="rec-tools">AI 开发工具推荐</a>
+      </div>
+    </div>
+
+    <div class="nav-group">
       <div class="nav-group-title" onclick="this.parentElement.classList.toggle('open')"><span class="arrow">▶</span> ❓ 常见问题</div>
       <div class="nav-group-items">
         <a class="nav-item" href="#" data-page="faq">FAQ</a>
@@ -928,6 +935,99 @@ openclaw plugin uninstall &lt;插件名&gt;</code></pre>
 <h3>Q: 和原版 OpenClaw 的区别？</h3>
 <p>基于 OpenClaw 官方版本，配合 U-Claw 中文配置界面，国内镜像加速，开箱即用。</p>
 </div>
+</div>
+
+<!-- ===== 推荐工具 ===== -->
+<div class="page" id="page-rec-tools">
+<h1>🛠️ AI 开发工具推荐</h1>
+<p>配置好 U-Claw 之后，这些免费工具能帮你进一步提升效率——无论是在终端用 AI 写代码，还是用可视化编辑器开发项目。</p>
+
+<div class="tip"><strong>为什么推荐这些工具？</strong>它们都是免费的、对国内用户友好的 AI 开发工具。配合 U-Claw 提供的 AI 网关，你可以用同一个 API Key 驱动多种开发工具，统一管理、降低成本。</div>
+
+<h2>🖥️ 终端 AI 工具（CLI）</h2>
+<p>CLI 工具运行在终端里，适合喜欢命令行操作或想快速完成自动化任务的用户。</p>
+
+<div class="card">
+<h3>iFlow CLI</h3>
+<p><strong>免费体验前沿大模型</strong>，包括 Kimi K2、Qwen3 Coder 等。</p>
+<ul>
+<li>💡 多智能体协作，可同时调度多个 AI 完成复杂任务</li>
+<li>🔌 支持 IDE 集成，也可独立在终端使用</li>
+<li>🆓 注册即送免费额度，国内直连可用</li>
+</ul>
+<h3>安装方式</h3>
+<p>访问官网下载：<a href="https://cli.iflow.cn/" target="_blank">https://cli.iflow.cn/</a></p>
+<div class="tip"><strong>搭配 U-Claw：</strong>在 iFlow 的模型设置中，将 API 地址指向 U-Claw 网关（<code>http://localhost:18789</code>），即可通过 U-Claw 统一管理 API Key 和模型切换。</div>
+</div>
+
+<div class="card">
+<h3>Kimi CLI</h3>
+<p><strong>月之暗面开源</strong>（Apache 2.0 协议），国产 AI 命令行工具。</p>
+<ul>
+<li>🖼️ 多模态支持，可处理图片、文档等</li>
+<li>🤖 Agent 模式 — 让 AI 自主完成多步任务</li>
+<li>💻 Shell 模式 — 用自然语言操作终端</li>
+<li>📖 完全开源，可自行定制</li>
+</ul>
+<h3>安装方式</h3>
+<pre><code>uv tool install kimi-cli</code></pre>
+<div class="tip"><strong>搭配 U-Claw：</strong>设置环境变量 <code>OPENAI_API_BASE=http://localhost:18789/v1</code>，Kimi CLI 即可通过 U-Claw 网关调用你配置的任意模型。</div>
+</div>
+
+<h2>📝 AI 编辑器（IDE）</h2>
+<p>如果你更习惯图形界面，AI 编辑器是更直观的选择。</p>
+
+<div class="card">
+<h3>Trae IDE</h3>
+<p><strong>字节跳动出品</strong>，基于 VS Code 的 AI 编辑器。</p>
+<ul>
+<li>🏗️ Builder 模式 — 用自然语言描述需求，AI 帮你生成完整项目</li>
+<li>🌍 支持 100+ 编程语言</li>
+<li>🆓 完全免费使用</li>
+<li>🔧 兼容 VS Code 插件生态</li>
+</ul>
+<h3>安装方式</h3>
+<p>访问官网下载：<a href="https://www.trae.ai/" target="_blank">https://www.trae.ai/</a></p>
+<div class="warn"><strong>建议下载国际版：</strong>国际版功能更完整、模型更丰富。国内版部分功能受限。</div>
+<div class="tip"><strong>搭配 U-Claw：</strong>在 Trae 设置中添加自定义模型提供商，API 地址填写 U-Claw 网关地址（<code>http://localhost:18789/v1</code>），即可在编辑器内使用 U-Claw 管理的模型。</div>
+</div>
+
+<h2>📊 工具对比</h2>
+<div style="overflow-x:auto">
+<table style="width:100%;border-collapse:collapse;margin-top:16px">
+<thead>
+<tr style="background:var(--bg-lighter);text-align:left">
+<th style="padding:12px;border-bottom:2px solid var(--border)">工具</th>
+<th style="padding:12px;border-bottom:2px solid var(--border)">类型</th>
+<th style="padding:12px;border-bottom:2px solid var(--border)">特点</th>
+<th style="padding:12px;border-bottom:2px solid var(--border)">适合谁</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding:12px;border-bottom:1px solid var(--border)"><strong>iFlow CLI</strong></td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">终端 CLI</td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">免费模型、多智能体、上手简单</td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">想快速体验 AI 编程的新手</td>
+</tr>
+<tr>
+<td style="padding:12px;border-bottom:1px solid var(--border)"><strong>Kimi CLI</strong></td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">终端 CLI</td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">开源、多模态、Agent + Shell 双模式</td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">喜欢终端操作的开发者</td>
+</tr>
+<tr>
+<td style="padding:12px;border-bottom:1px solid var(--border)"><strong>Trae IDE</strong></td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">图形编辑器</td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">VS Code 基础、Builder 模式、免费</td>
+<td style="padding:12px;border-bottom:1px solid var(--border)">习惯图形界面的用户</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="tip"><strong>🐣 小白建议：</strong>不知道选哪个？先试 <strong>iFlow CLI</strong>（最简单，注册就能用）或 <strong>Trae IDE</strong>（有图形界面，像用 Word 一样直观）。等熟练之后再试 Kimi CLI 解锁更多高级玩法。</div>
+
 </div>
 
 <!-- ===== 联系我们 ===== -->
