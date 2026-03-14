@@ -53,6 +53,16 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Serve main Config.html
+  if (req.url.startsWith('/config')) {
+    const mainConfigHtml = path.join(__dirname, '../Config.html');
+    if (fs.existsSync(mainConfigHtml)) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      fs.createReadStream(mainConfigHtml).pipe(res);
+      return;
+    }
+  }
+
   // Serve static files
   const filePath = req.url === '/'
     ? path.join(__dirname, 'public/index.html')

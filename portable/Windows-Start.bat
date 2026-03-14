@@ -93,26 +93,16 @@ start /B "" "%NODE_BIN%" "%CONFIG_SERVER%\server.js" >nul 2>&1
 REM Wait for config server to start
 timeout /t 2 /nobreak >nul
 
-REM Open both Config Center and Dashboard
-echo   Opening Config Center and Dashboard...
-timeout /t 1 /nobreak >nul
-
-REM Open Config Center (Node.js web UI)
-start "" http://127.0.0.1:18788/
-
-REM Open OpenClaw Dashboard
-start "" http://127.0.0.1:%PORT%/#token=uclaw
-
 echo   Browsers opened. Starting OpenClaw Gateway on port %PORT%...
 echo   DO NOT close this window while using U-Claw!
 echo.
 
 cd /d "%CORE_DIR%"
 
-REM Check if model is configured - open Config.html for first time, dashboard for returning users
+REM Check if model is configured - open Config page for first time, dashboard for returning users
 set "HAS_MODEL=no"
-if exist "%DATA_DIR%\config.json" (
-    findstr /c:"agent" "%DATA_DIR%\config.json" >nul 2>&1 && set "HAS_MODEL=yes"
+if exist "%STATE_DIR%\openclaw.json" (
+    findstr /c:"agent" "%STATE_DIR%\openclaw.json" >nul 2>&1 && set "HAS_MODEL=yes"
 )
 
 if "%HAS_MODEL%"=="yes" (
@@ -120,7 +110,7 @@ if "%HAS_MODEL%"=="yes" (
     start "" http://127.0.0.1:%PORT%/#token=uclaw
 ) else (
     echo   First time - opening Config page...
-    start "" "%UCLAW_DIR%Config.html?port=%PORT%"
+    start "" "http://127.0.0.1:18788/config?port=%PORT%"
 )
 
 if not exist "%DATA_DIR%\logs" mkdir "%DATA_DIR%\logs"
