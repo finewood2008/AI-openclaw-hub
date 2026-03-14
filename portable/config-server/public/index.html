@@ -95,14 +95,32 @@ async function loadConfig() {
 
     // 填充表单
     if (config.agent) {
-      document.getElementById('provider').value = config.agent.provider || 'anthropic';
-      document.getElementById('apiKey').value = config.agent.apiKey || '';
-      if (config.agent.baseUrl) {
-        document.getElementById('baseUrl').value = config.agent.baseUrl;
-        document.getElementById('baseUrlGroup').style.display = 'block';
+      const model = config.agent.model || '';
+      const providers = config.agent.providers || {};
+      let provider = 'anthropic';
+      let apiKey = '';
+      let baseUrl = '';
+      let modelName = '';
+
+      if (model.startsWith('custom/')) {
+        provider = 'custom';
+        modelName = model.replace('custom/', '');
+        baseUrl = (providers.custom || {}).baseUrl || '';
+        apiKey = (providers.custom || {}).apiKey || '';
+      } else if (model.startsWith('openai/')) {
+        provider = 'openai';
+        apiKey = (providers.openai || {}).apiKey || '';
+      } else if (model.startsWith('anthropic/')) {
+        provider = 'anthropic';
+        apiKey = (providers.anthropic || {}).apiKey || '';
       }
-      if (config.agent.model) {
-        document.getElementById('modelName').value = config.agent.model;
+
+      document.getElementById('provider').value = provider;
+      document.getElementById('apiKey').value = apiKey;
+      if (provider === 'custom') {
+        document.getElementById('baseUrl').value = baseUrl;
+        document.getElementById('baseUrlGroup').style.display = 'block';
+        document.getElementById('modelName').value = modelName;
         document.getElementById('modelGroup').style.display = 'block';
       }
     }
@@ -137,10 +155,22 @@ async function saveAI() {
     return;
   }
 
-  config.agent = { provider, apiKey };
+  config.agent = {};
   if (provider === 'custom') {
-    config.agent.baseUrl = baseUrl;
-    config.agent.model = modelName;
+    config.agent = {
+      model: `custom/${modelName}`,
+      providers: { custom: { baseUrl, apiKey } }
+    };
+  } else if (provider === 'anthropic') {
+    config.agent = {
+      model: `anthropic/claude-sonnet-4-20250514`,
+      providers: { anthropic: { apiKey } }
+    };
+  } else if (provider === 'openai') {
+    config.agent = {
+      model: `openai/gpt-4o`,
+      providers: { openai: { apiKey } }
+    };
   }
 
   try {

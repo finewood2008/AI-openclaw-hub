@@ -125,7 +125,8 @@ done
 if [ $PORT -ne 18789 ]; then
     "$NODE_BIN" -e "
         const fs = require('fs');
-        const p = '$DATA_DIR/config.json';
+        const p = '$STATE_DIR/openclaw.json';
+        if (!fs.existsSync(p)) process.exit(0);
         const c = JSON.parse(fs.readFileSync(p, 'utf8'));
         c.gateway = c.gateway || {};
         c.gateway.port = $PORT;
@@ -147,12 +148,17 @@ GW_LOG="$DATA_DIR/logs/gateway.log"
 "$NODE_BIN" "$OPENCLAW_MJS" gateway run --allow-unconfigured --force --port $PORT 2>&1 | tee -a "$GW_LOG" &
 GW_PID=$!
 
+# Start Config Server in background
+echo -e "  ${CYAN}Starting Config Center...${NC}"
+"$NODE_BIN" "$UCLAW_DIR/config-server/server.js" &
+CONFIG_SERVER_PID=$!
+
 # ---- 9. Wait & open browser ----
 for i in $(seq 1 30); do
     sleep 0.5
     if curl -s -o /dev/null -w '' "http://127.0.0.1:$PORT/" 2>/dev/null; then
         DASHBOARD_URL="http://127.0.0.1:$PORT/#token=${TOKEN}"
-        CONFIG_PAGE="$UCLAW_DIR/Config.html?port=$PORT"
+        CONFIG_PAGE="http://127.0.0.1:18788/config?port=$PORT"
         echo ""
         echo -e "  ${GREEN}✅ Started successfully!${NC}"
         echo ""
@@ -183,6 +189,7 @@ for p in ['$STATE_DIR/openclaw.json','$DATA_DIR/config.json']:
 done
 
 wait $GW_PID
+kill $CONFIG_SERVER_PID 2>/dev/null
 
 echo ""
 echo -e "  ${YELLOW}OpenClaw stopped.${NC}"
